@@ -1,6 +1,8 @@
 # AmbientaLVA
 Repositório do Laboratório de Vibrações e Acústica (LVA) para cálculos precisos de ruído ambiental.
-
+<p align = "center">
+ <img width = "470" src = "/Resources/logo.png">
+</p>
 Bem-vindo ao AmbientaLVA, o repositório do Laboratório de Vibrações e Acústica (LVA) dedicado à modelagem avançada para análise de acústica ambiental em ambientes urbanos.
 
 ## Objetivo
