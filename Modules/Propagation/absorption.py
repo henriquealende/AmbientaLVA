@@ -97,7 +97,7 @@ class Absorption():
         if source == 'point':
             C1 = 0.75
             C2 = 1
-        else:
+        elif source == 'line':
             C1 = 1
             C2 = 1
 
@@ -112,6 +112,4 @@ class Absorption():
         Abarr = 20 * C1 * np.log10((np.sqrt(2 * np.pi * N)) / (np.tanh(C2 * np.sqrt(2 * np.pi * N)))) + 5
 
         # Print the result for testing purposes
-        print(Abarr)
-
         return Abarr
