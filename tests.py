@@ -1,5 +1,5 @@
-from Modules.Propagation.absortion import Absorption
+from Modules.Propagation.absorption import Absorption
 
-absortion = Absorption()
+absorption = Absorption()
 
-absortion.get_ground_absorption(1, 1, 1, 200, 2, 2)
+absorption.get_barrier_absorption('point', 50, 25, 5)

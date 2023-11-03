@@ -73,3 +73,45 @@ class Absorption():
         Ag = np.sum([Asr[0], Asr[1], Am],axis=0)
         return Ag
         
+    def get_barrier_absorption(self, source, r, d, h):
+        """
+        Calculate barrier absorption for an acoustic barrier.
+
+        Parameters:
+        - source: Type of source ('point' or 'line')
+        - r: Distance from the source to the barrier
+        - d: Distance from the barrier to the receptor
+        - h: Height of the barrier
+
+        Returns:
+        - Abarr: Barrier absorption coefficient
+        """
+
+        # Frequency Vector
+        freqVector = np.array([63, 125, 250, 500, 1000, 2000, 4000, 8000])
+
+        # Speed of sound in air
+        c0 = 344
+
+        # Coefficients for different source types
+        if source == 'point':
+            C1 = 0.75
+            C2 = 1
+        else:
+            C1 = 1
+            C2 = 1
+
+        # Distances and calculations
+        A = np.sqrt((r**2) + (h**2))
+        B = np.sqrt((d**2) + (h**2))
+        C = r + d
+        lambda_c = c0 / freqVector  # Wavelength
+        N = (A + B - C) / (lambda_c / 2)
+
+        # Barrier absorption calculation
+        Abarr = 20 * C1 * np.log10((np.sqrt(2 * np.pi * N)) / (np.tanh(C2 * np.sqrt(2 * np.pi * N)))) + 5
+
+        # Print the result for testing purposes
+        print(Abarr)
+
+        return Abarr
