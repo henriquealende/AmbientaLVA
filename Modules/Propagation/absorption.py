@@ -71,6 +71,7 @@ class Absorption():
                     Am[m] = -3 * q * (1 - G[2])
         
         Ag = np.sum([Asr[0], Asr[1], Am],axis=0)
+        
         return Ag
         
     def get_barrier_absorption(self, source, r, d, h):
@@ -110,6 +111,28 @@ class Absorption():
 
         # Barrier absorption calculation
         Abarr = 20 * C1 * np.log10((np.sqrt(2 * np.pi * N)) / (np.tanh(C2 * np.sqrt(2 * np.pi * N)))) + 5
-
+        Abarr = np.minimum(Abarr, 20)
         # Print the result for testing purposes
         return Abarr
+    
+
+        
+    def get_vegetation_absorption(self, n, rveg):
+        """
+        Calculate vegetation absorption coefficient.
+
+        Parameters:
+        - n: Vegetation density parameter
+        - rveg: Half-width of the vegetation zone (in meters)
+
+        Returns:
+        - Aveg: Vegetation absorption coefficient
+        """
+
+        # Frequency Vector
+        freqVector = np.array([63, 125, 250, 500, 1000, 2000, 4000, 8000])
+
+        # Vegetation absorption calculation
+        Aveg = n * ((freqVector / 1000) ** (1/3)) * (rveg/100)
+        Aveg = np.minimum(Aveg, 10)
+        return Aveg

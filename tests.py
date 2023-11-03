@@ -2,4 +2,5 @@ from Modules.Propagation.absorption import Absorption
 
 absorption = Absorption()
 
-absorption.get_barrier_absorption('point', 50, 25, 5)
+absorption.get_vegetation_absorption(10, 100)
+
