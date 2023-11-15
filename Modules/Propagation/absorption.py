@@ -22,7 +22,7 @@ class Absorption():
         """
 
         # Frequency Vector
-        freqVector = np.array([63, 125, 250, 500, 1000, 2000, 4000, 8000])
+        freqVector = np.array([63.0, 125.0, 250.0, 500.0, 1000.0, 2000.0, 4000.0, 8000.0])
 
         # Ground Factors
         G = np.array([Gs, Gr, Gm])
@@ -89,7 +89,7 @@ class Absorption():
         """
 
         # Frequency Vector
-        freqVector = np.array([63, 125, 250, 500, 1000, 2000, 4000, 8000])
+        freqVector = np.array([63.0, 125.0, 250.0, 500.0, 1000.0, 2000.0, 4000.0, 8000.0])
 
         # Speed of sound in air
         c0 = 344
@@ -130,9 +130,46 @@ class Absorption():
         """
 
         # Frequency Vector
-        freqVector = np.array([63, 125, 250, 500, 1000, 2000, 4000, 8000])
+        freqVector = np.array([63.0, 125.0, 250.0, 500.0, 1000.0, 2000.0, 4000.0, 8000.0])
 
         # Vegetation absorption calculation
         Aveg = n * ((freqVector / 1000) ** (1/3)) * (rveg/100)
         Aveg = np.minimum(Aveg, 10)
         return Aveg
+    
+    def get_air_absorption(self, pa, T, ht):
+        """
+        Calculate air absorption for different frequencies.
+
+        Args:
+        - pa (float): Atmospheric pressure (Pa).
+        - T (float): Ambient temperature (°C).
+        - ht (float): Relative humidity.
+
+        Returns:
+        - alpha (numpy.ndarray): Array containing air absorption values for each frequency.
+        """
+        # Frequency Vector
+        freqVector = np.array([63.0, 125.0, 250.0, 500.0, 1000.0, 2000.0, 4000.0, 8000.0])
+        pr = 101.323
+        T01 = 273.16
+        T = T + T01
+        T0 = 293.15
+        C = -6.8346 * ((T01 / T) ** 1.261) + 4.6151
+        psat = pr * (10 ** C)
+        h = ht * (psat / pr) * ((pa / pr) ** -1)
+
+        # Oxygen relaxation frequency
+        f_r_o = ((pa / pr) * (24 + (4.04 * (10 ** 4)) * h * ((0.02 + h) / (0.391 + h))))
+
+        # Nitrogen relaxation frequency
+        f_r_n = (pa / pr) * ((T / T0) ** 0.5) * (9 + 280 * h * np.exp(-4.17 * (((T / T0) ** (-1 / 3) - 1))))
+
+        # Calculate alpha
+        alpha_classic = 8686 * (freqVector**2) * ((1.84 * (10**(-11)) * ((pa/pr)**(-1)) * ((T/T0)**(1/2))))
+        
+        alpha = 8686 * (freqVector**2) * ((1.84 * (10**(-11)) * ((pa/pr)**(-1)) * ((T/T0)**(1/2))) + 
+                        ((T/T0)**(-5/2))* (0.01275 * ((np.exp(-2239.1/T))/(f_r_o + ((freqVector ** 2)/f_r_o))) +
+                        0.1068 * ((np.exp(-3352.0/T)) / (f_r_n + ((freqVector ** 2)/f_r_n)))))
+        
+        return alpha
